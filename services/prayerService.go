@@ -1,11 +1,25 @@
 package services
 
-import "prayer-book/repository"
+import (
+	"prayer-book/models"
+	"prayer-book/repository"
+)
 
-func GetPrayersService() {
+func GetPrayersService() ([]models.Prayer, error) {
 
-	_, err := repository.GetAllPrayers()
+	prayers, err := repository.GetAllPrayers()
 	if err != nil {
-		return err, nil
+		return []models.Prayer{}, err
 	}
+
+	return prayers, nil
+}
+
+func InsertPrayer(prayer models.Prayer) (int, error) {
+
+	id, err := repository.InsertPrayer(prayer)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
 }

@@ -9,6 +9,7 @@ import (
 func main() {
 	fmt.Println("Praise God!")
 	config.ConnectDatabase()
+	config.InitializePrayersTable()
 
 	defer config.DB.Close()
 

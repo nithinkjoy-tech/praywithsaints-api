@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"prayer-book/models"
 	"prayer-book/services"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,19 @@ func GetPrayerById() {
 	fmt.Println("get prayer by ID controller")
 }
 
-func CreatePrayer() {
+func InsertPrayer(c *gin.Context) {
+	var prayer models.Prayer
+	if err := c.ShouldBindJSON(&prayer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := services.InsertPrayer(prayer)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Prayer successfully created",
+		"id": id})
 	fmt.Println("create prayer controller")
 }

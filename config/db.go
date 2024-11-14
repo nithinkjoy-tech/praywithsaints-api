@@ -40,3 +40,23 @@ func ConnectDatabase() {
 
 	fmt.Println("Database connected!")
 }
+
+func InitializePrayersTable() error {
+	query := `
+        CREATE TABLE IF NOT EXISTS prayers (
+            prayer_id SERIAL PRIMARY KEY,
+            prayer_name VARCHAR(255) NOT NULL,
+            how_to_pray TEXT,
+            impact TEXT,
+            talk_link VARCHAR(255),
+            author VARCHAR(255),
+            testimonies TEXT[],
+            references TEXT[]
+        )
+    `
+	_, err := DB.Exec(query)
+	if err != nil {
+		return err
+	}
+	return nil
+}
