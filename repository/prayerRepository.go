@@ -40,6 +40,28 @@ func GetAllPrayers() ([]models.Prayer, error) {
 
 }
 
+func GetPrayersByID(id int) (models.Prayer, error) {
+	query := "select * from prayers where prayer_id=$1"
+
+	var prayer models.Prayer
+	err := config.DB.QueryRow(query, id).Scan(
+		&prayer.PrayerID,
+		&prayer.PrayerName,
+		&prayer.HowtoPray,
+		&prayer.Impact,
+		&prayer.TalkLink,
+		&prayer.Author,
+		&prayer.Testimonies,
+		&prayer.References,
+	)
+
+	if err != nil {
+		return models.Prayer{}, err
+	}
+
+	return prayer, nil
+}
+
 func InsertPrayer(prayer models.Prayer) (int, error) {
 	query := `
         INSERT INTO prayers (

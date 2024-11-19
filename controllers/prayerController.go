@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"prayer-book/models"
 	"prayer-book/services"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +13,7 @@ import (
 func GetPrayers(c *gin.Context) {
 	fmt.Println("get prayer controller")
 
-	prayer, err := services.GetPrayersService()
+	prayer, err := services.GetPrayers()
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to fetch prayers"})
@@ -22,8 +23,13 @@ func GetPrayers(c *gin.Context) {
 	c.JSON(http.StatusOK, prayer)
 }
 
-func GetPrayerById() {
-	fmt.Println("get prayer by ID controller")
+func GetPrayerById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+	services.GetPrayersByID(id)
 }
 
 func InsertPrayer(c *gin.Context) {
@@ -40,5 +46,4 @@ func InsertPrayer(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Prayer successfully created",
 		"id": id})
-	fmt.Println("create prayer controller")
 }
