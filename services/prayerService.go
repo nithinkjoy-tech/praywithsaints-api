@@ -5,25 +5,25 @@ import (
 	"prayer-book/repository"
 )
 
-func GetPrayers() ([]models.Prayer, error) {
+func GetPrayers() ([]models.PrayerStruct, error) {
 	prayers, err := repository.GetAllPrayers()
 	if err != nil {
-		return []models.Prayer{}, err
+		return []models.PrayerStruct{}, err
 	}
 
 	return prayers, nil
 }
 
-func GetPrayersByID(id int) (models.Prayer, error) {
+func GetPrayersByID(id int) (models.PrayerStruct, error) {
 	prayers, err := repository.GetPrayersByID(id)
 	if err != nil {
-		return models.Prayer{}, err
+		return models.PrayerStruct{}, err
 	}
 
 	return prayers, nil
 }
 
-func InsertPrayer(prayer models.Prayer) (int, error) {
+func InsertPrayer(prayer models.PrayerStruct) (int, error) {
 	id, err := repository.InsertPrayer(prayer)
 	if err != nil {
 		return 0, err

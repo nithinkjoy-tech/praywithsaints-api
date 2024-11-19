@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"prayer-book/models"
 	"prayer-book/services"
@@ -11,8 +10,6 @@ import (
 )
 
 func GetPrayers(c *gin.Context) {
-	fmt.Println("get prayer controller")
-
 	prayer, err := services.GetPrayers()
 
 	if err != nil {
@@ -33,7 +30,7 @@ func GetPrayerById(c *gin.Context) {
 }
 
 func InsertPrayer(c *gin.Context) {
-	var prayer models.Prayer
+	var prayer models.PrayerStruct
 	if err := c.ShouldBindJSON(&prayer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

@@ -7,30 +7,32 @@ import (
 	"github.com/lib/pq"
 )
 
-func GetAllPrayers() ([]models.Prayer, error) {
-	var prayers []models.Prayer
+func GetAllPrayers() ([]models.PrayerStruct, error) {
+	var prayers []models.PrayerStruct
 	query := "select * from prayers"
 	rows, err := config.DB.Query(query)
 	if err != nil {
-		return []models.Prayer{}, nil
+		return []models.PrayerStruct{}, nil
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var prayer models.Prayer
+		var prayer models.PrayerStruct
 		err = rows.Scan(
 			&prayer.PrayerID,
 			&prayer.PrayerName,
+			&prayer.Prayer,
 			&prayer.HowtoPray,
 			&prayer.Impact,
 			&prayer.TalkLink,
 			&prayer.Author,
+			&prayer.ApprovedBy,
 			&prayer.Testimonies,
 			&prayer.References,
 		)
 
 		if err != nil {
-			return []models.Prayer{}, nil
+			return []models.PrayerStruct{}, nil
 		}
 
 		prayers = append(prayers, prayer)
@@ -40,48 +42,54 @@ func GetAllPrayers() ([]models.Prayer, error) {
 
 }
 
-func GetPrayersByID(id int) (models.Prayer, error) {
+func GetPrayersByID(id int) (models.PrayerStruct, error) {
 	query := "select * from prayers where prayer_id=$1"
 
-	var prayer models.Prayer
+	var prayer models.PrayerStruct
 	err := config.DB.QueryRow(query, id).Scan(
 		&prayer.PrayerID,
 		&prayer.PrayerName,
+		&prayer.Prayer,
 		&prayer.HowtoPray,
 		&prayer.Impact,
 		&prayer.TalkLink,
 		&prayer.Author,
+		&prayer.ApprovedBy,
 		&prayer.Testimonies,
 		&prayer.References,
 	)
 
 	if err != nil {
-		return models.Prayer{}, err
+		return models.PrayerStruct{}, err
 	}
 
 	return prayer, nil
 }
 
-func InsertPrayer(prayer models.Prayer) (int, error) {
+func InsertPrayer(prayer models.PrayerStruct) (int, error) {
 	query := `
         INSERT INTO prayers (
             prayer_name,
+            prayer,
             how_to_pray,
             impact,
             talk_link,
             author,
+			approved_by
             testimonies,
             "references"
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING prayer_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING prayer_id
     `
 
 	var id int
 	err := config.DB.QueryRow(query,
 		prayer.PrayerName,
+		prayer.Prayer,
 		prayer.HowtoPray,
 		prayer.Impact,
 		prayer.TalkLink,
 		prayer.Author,
+		prayer.ApprovedBy,
 		pq.Array(prayer.Testimonies),
 		pq.Array(prayer.References),
 	).Scan(&id)
