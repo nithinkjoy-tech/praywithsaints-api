@@ -46,12 +46,15 @@ func InitializePrayersTable() error {
         CREATE TABLE IF NOT EXISTS prayers (
             prayer_id SERIAL PRIMARY KEY,
             prayer_name VARCHAR(255) NOT NULL,
+            prayer VARCHAR(1000000) NOT NULL,
             how_to_pray TEXT,
             impact TEXT,
-            talk_link VARCHAR(255),
+            talk_links TEXT[],
             author VARCHAR(255),
+            author_link VARCHAR(255),
+			approved_by VARCHAR(255),
             testimonies TEXT[],
-            references TEXT[]
+            "references" TEXT[]
         )
     `
 	_, err := DB.Exec(query)

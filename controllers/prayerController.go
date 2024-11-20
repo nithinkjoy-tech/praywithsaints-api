@@ -26,7 +26,13 @@ func GetPrayerById(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
 		return
 	}
-	services.GetPrayersByID(id)
+	prayers, err := services.GetPrayersByID(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		return
+	}
+	c.JSON(http.StatusOK, prayers)
+
 }
 
 func InsertPrayer(c *gin.Context) {

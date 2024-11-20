@@ -24,11 +24,12 @@ func GetAllPrayers() ([]models.PrayerStruct, error) {
 			&prayer.Prayer,
 			&prayer.HowtoPray,
 			&prayer.Impact,
-			&prayer.TalkLink,
+			pq.Array(&prayer.TalkLinks),
 			&prayer.Author,
+			&prayer.AuthorLink,
 			&prayer.ApprovedBy,
-			&prayer.Testimonies,
-			&prayer.References,
+			pq.Array(&prayer.Testimonies),
+			pq.Array(&prayer.References),
 		)
 
 		if err != nil {
@@ -52,11 +53,12 @@ func GetPrayersByID(id int) (models.PrayerStruct, error) {
 		&prayer.Prayer,
 		&prayer.HowtoPray,
 		&prayer.Impact,
-		&prayer.TalkLink,
+		pq.Array(&prayer.TalkLinks),
 		&prayer.Author,
+		&prayer.AuthorLink,
 		&prayer.ApprovedBy,
-		&prayer.Testimonies,
-		&prayer.References,
+		pq.Array(&prayer.Testimonies),
+		pq.Array(&prayer.References),
 	)
 
 	if err != nil {
@@ -73,12 +75,13 @@ func InsertPrayer(prayer models.PrayerStruct) (int, error) {
             prayer,
             how_to_pray,
             impact,
-            talk_link,
+            talk_links,
             author,
-			approved_by
+            author_link,
+			approved_by,
             testimonies,
             "references"
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING prayer_id
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING prayer_id
     `
 
 	var id int
@@ -87,8 +90,9 @@ func InsertPrayer(prayer models.PrayerStruct) (int, error) {
 		prayer.Prayer,
 		prayer.HowtoPray,
 		prayer.Impact,
-		prayer.TalkLink,
+		pq.Array(prayer.TalkLinks),
 		prayer.Author,
+		prayer.AuthorLink,
 		prayer.ApprovedBy,
 		pq.Array(prayer.Testimonies),
 		pq.Array(prayer.References),
