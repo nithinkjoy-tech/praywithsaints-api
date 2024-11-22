@@ -9,7 +9,7 @@ import (
 
 func GetAllPrayers() ([]models.PrayerStruct, error) {
 	var prayers []models.PrayerStruct
-	query := "select * from prayers"
+	query := "select * from prayers where is_approved=true"
 	rows, err := config.DB.Query(query)
 	if err != nil {
 		return []models.PrayerStruct{}, nil
@@ -25,11 +25,12 @@ func GetAllPrayers() ([]models.PrayerStruct, error) {
 			&prayer.HowtoPray,
 			&prayer.Impact,
 			pq.Array(&prayer.TalkLinks),
-			&prayer.Author,
+			&prayer.AuthorName,
 			&prayer.AuthorLink,
 			&prayer.ApprovedBy,
 			pq.Array(&prayer.Testimonies),
 			pq.Array(&prayer.References),
+			&prayer.IsApproved,
 		)
 
 		if err != nil {
@@ -54,11 +55,12 @@ func GetPrayersByID(id int) (models.PrayerStruct, error) {
 		&prayer.HowtoPray,
 		&prayer.Impact,
 		pq.Array(&prayer.TalkLinks),
-		&prayer.Author,
+		&prayer.AuthorName,
 		&prayer.AuthorLink,
 		&prayer.ApprovedBy,
 		pq.Array(&prayer.Testimonies),
 		pq.Array(&prayer.References),
+		&prayer.IsApproved,
 	)
 
 	if err != nil {
@@ -76,7 +78,7 @@ func InsertPrayer(prayer models.PrayerStruct) (int, error) {
             how_to_pray,
             impact,
             talk_links,
-            author,
+            author_name,
             author_link,
 			approved_by,
             testimonies,
@@ -91,7 +93,7 @@ func InsertPrayer(prayer models.PrayerStruct) (int, error) {
 		prayer.HowtoPray,
 		prayer.Impact,
 		pq.Array(prayer.TalkLinks),
-		prayer.Author,
+		prayer.AuthorName,
 		prayer.AuthorLink,
 		prayer.ApprovedBy,
 		pq.Array(prayer.Testimonies),
