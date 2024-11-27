@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"prayer-book/config"
 	"prayer-book/routes"
 )
@@ -9,7 +10,9 @@ import (
 func main() {
 	fmt.Println("Praise God!")
 	config.ConnectDatabase()
-	config.InitializePrayersTable()
+	if err := config.InitializePrayersTable(); err != nil {
+		log.Fatal(err)
+	}
 
 	defer config.DB.Close()
 
